@@ -22,6 +22,8 @@ queue. The objects you wish to pass must support "pickling". Here's an example:
 0
 >>> msgq.msgrcv(ID, 0)
 (1, 2, {'foo': 'bar'})
+>>> msgq.msgctl(ID, msgq.IPC_RMID)
+0
 </pre>
 
 To build the extension type in the following:
