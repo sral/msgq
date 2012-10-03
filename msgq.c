@@ -1,3 +1,11 @@
+/*
+ * msgq.c: System V IPC Message Queue Python Extension Module
+ *
+ * This extension module wraps and makes system calls related to System V 
+ * message queues available to Python applications.
+ *
+ * Copyright (c) 2012 Lars Djerf <lars.djerf@gmail.com>
+ */
 #include <Python.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -70,7 +78,8 @@ msgq_msgsnd(PyObject *self, PyObject *args)
 
   data_msg->mtype = DATA_MSG;
   if (memcpy(&data_msg->mtext, cstring, strlen(cstring) + 1) == NULL) {
-    return PyErr_SetFromErrno(PyExc_IOError);
+    PyErr_SetString(PyExc_IOError, "Failed to copy data into memory.");
+    return NULL;
   }
  
   // Send message size
@@ -150,7 +159,7 @@ msgq_msgctl(PyObject *self, PyObject *args)
   }
 
   if ((rv = msgctl(msqid, cmd, NULL)) == -1) {
-    return NULL;
+    return PyErr_SetFromErrno(PyExc_IOError);
   }
 
   return Py_BuildValue("i", rv);

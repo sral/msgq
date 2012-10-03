@@ -37,6 +37,6 @@ Good luck... here, have my card:
             (__)
       (  ( ((oo)) ) )
    .-------- \/
-  / //_____ //  
+  / //_____ //
  * ^^      ^^  lars.djerf@gmail.com
 </pre>
