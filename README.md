@@ -22,14 +22,16 @@ queue. The objects you wish to pass must support "pickling". Here's an example:
 0
 >>> msgq.msgrcv(ID, 0)
 (1, 2, {'foo': 'bar'})
+>>> msgq.msgctl(ID, msgq.IPC_STAT)
+{'msg_rtime': 1350377060, 'msg_lrpid': 19453, 'msg_lspid': 19453, 'msg_ctime': 1350377056, 'msg_qbytes': 16384, 'msg_perm': {'uid': 1000, 'cgid': 100, 'gid': 100, 'mode': 438, 'cuid': 1000, '__key': 704726339, '__seq': 56}, 'msg_qnum': 0, 'msg_stime': 1350377056}
 >>> msgq.msgctl(ID, msgq.IPC_RMID)
 0
 </pre>
 
 To build the extension type in the following:
-$ python setup.py build
+$ setup.py build
 And to install the extenstion try this:
-$ python setup.py install
+$ setup.py install
 
 
 Good luck... here, have my card:

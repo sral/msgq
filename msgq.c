@@ -137,7 +137,6 @@ msgq_msgrcv(PyObject *self, PyObject *args)
   loads = PyObject_GetAttr(pickle, Py_BuildValue("s", "loads"));
   data = PyObject_CallFunctionObjArgs(loads, Py_BuildValue("s", data_msg->mtext), NULL);
 
-  //data = Py_BuildValue("s", data_msg->mtext);
   PyMem_Free(data_msg);
   return data;
 }
@@ -146,22 +145,112 @@ static PyObject *
 msgq_msgctl(PyObject *self, PyObject *args)
 {
   int msqid, cmd, rv;
-  struct msqid_ds *buf = NULL;
- 
+  struct msqid_ds ipc_stat_ds, *buf = NULL;
+  struct msginfo ipc_info_ds;
+  PyObject *dict_msqid_ds, *dict_ipc_perm, *tmp_obj;
+
   if (!PyArg_ParseTuple(args, "ii", &msqid, &cmd)) {
     return NULL;
   }
 
-  if (cmd != IPC_RMID) {
-    // create msqid_ds struct
-    // and set buf to point to it
-    buf = NULL;
+  switch(cmd) {
+  case IPC_RMID:
+    break;
+  case IPC_SET:
+    PyErr_SetString(PyExc_NotImplementedError, "IPC_SET not supported");
+    return NULL;
+  case IPC_STAT:
+    buf = (struct msqid_ds *) &ipc_info_ds;
+  case IPC_INFO:
+    buf = &ipc_stat_ds;
+    break;
+  default:
+    PyErr_SetString(PyExc_ValueError, "Invalid value for command");
+    return NULL;
   }
 
-  if ((rv = msgctl(msqid, cmd, NULL)) == -1) {
+  if ((rv = msgctl(msqid, cmd, buf)) == -1) {
     return PyErr_SetFromErrno(PyExc_IOError);
   }
 
+  if (buf != NULL) {
+    dict_ipc_perm = PyDict_New();
+    tmp_obj = Py_BuildValue("i", buf->msg_perm.__key);
+    PyDict_SetItemString(dict_ipc_perm, "__key",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_perm.uid);
+    PyDict_SetItemString(dict_ipc_perm, "uid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_perm.gid);
+    PyDict_SetItemString(dict_ipc_perm, "gid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_perm.cuid);
+    PyDict_SetItemString(dict_ipc_perm, "cuid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_perm.cgid);
+    PyDict_SetItemString(dict_ipc_perm, "cgid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("H", buf->msg_perm.mode);
+    PyDict_SetItemString(dict_ipc_perm, "mode",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("H", buf->msg_perm.__seq);
+    PyDict_SetItemString(dict_ipc_perm, "__seq",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    dict_msqid_ds = PyDict_New();
+    PyDict_SetItemString(dict_msqid_ds, "msg_perm", dict_ipc_perm);
+    Py_DECREF(dict_ipc_perm);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_stime);
+    PyDict_SetItemString(dict_msqid_ds, "msg_stime", 
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_rtime);
+    PyDict_SetItemString(dict_msqid_ds, "msg_rtime",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_ctime);
+    PyDict_SetItemString(dict_msqid_ds, "msg_ctime",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_qnum);
+    PyDict_SetItemString(dict_msqid_ds, "msg_qnum",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_qbytes);
+    PyDict_SetItemString(dict_msqid_ds, "msg_qbytes",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_lspid);
+    PyDict_SetItemString(dict_msqid_ds, "msg_lspid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    tmp_obj = Py_BuildValue("i", buf->msg_lrpid);
+    PyDict_SetItemString(dict_msqid_ds, "msg_lrpid",
+			 tmp_obj);
+    Py_DECREF(tmp_obj);
+
+    return dict_msqid_ds;
+  }
   return Py_BuildValue("i", rv);
 }
 

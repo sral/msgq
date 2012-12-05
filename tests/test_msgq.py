@@ -6,7 +6,7 @@ class MsgqTestInternals(unittest.TestCase):
         self.assertEqual(msgq.IPC_CREAT, 512)
 
     def test_is_defined_IPC_EXCL(self):
-        self.assertEqual(msgq.IPC_CREAT, 1024)
+        self.assertEqual(msgq.IPC_EXCL, 1024)
 
     def test_is_defined_IPC_NOWAIT(self):
         self.assertEqual(msgq.IPC_NOWAIT, 2048)
