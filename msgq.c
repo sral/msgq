@@ -161,6 +161,7 @@ msgq_msgctl(PyObject *self, PyObject *args)
     return NULL;
   case IPC_STAT:
     buf = (struct msqid_ds *) &ipc_info_ds;
+    break;
   case IPC_INFO:
     buf = &ipc_stat_ds;
     break;
