@@ -1,6 +1,7 @@
 import msgq
 import unittest
 
+
 class MsgqTestInternals(unittest.TestCase):
     def test_is_defined_IPC_CREAT(self):
         self.assertEqual(msgq.IPC_CREAT, 512)
@@ -36,10 +37,10 @@ class MsgqTestSystemCalls(unittest.TestCase):
 
     def test_get_message_queue_identifier(self):
         pass
-    
+
     def test_remove_message_queue(self):
         pass
-    
+
     def tearDown(self):
         pass
 
