@@ -1,7 +1,7 @@
 /*
  * msgq.c: System V IPC Message Queue Python Extension Module
  *
- * This extension module wraps and makes system calls related to System V 
+ * This extension module wraps and makes system calls related to System V
  * message queues available to Python applications.
  *
  * Copyright (c) 2012 Lars Djerf <lars.djerf@gmail.com>
@@ -17,7 +17,7 @@
 PyObject *pickle;
 
 static PyObject *
-msgq_ftok(PyObject *self, PyObject *args) 
+msgq_ftok(PyObject *self, PyObject *args)
 {
   const char *pathname;
   int proj_id;
@@ -70,7 +70,7 @@ msgq_msgsnd(PyObject *self, PyObject *args)
   dumps = PyObject_GetAttr(pickle, Py_BuildValue("s", "dumps"));
   string = PyObject_CallFunctionObjArgs(dumps, data, NULL);
   cstring = PyString_AsString(string);
-  
+
   data_msg = PyMem_Malloc(offsetof(struct msgbuf, mtext) + strlen(cstring) + 1);
   if (data_msg == NULL) {
     return PyErr_SetFromErrno(PyExc_IOError);
@@ -81,7 +81,7 @@ msgq_msgsnd(PyObject *self, PyObject *args)
     PyErr_SetString(PyExc_IOError, "Failed to copy data into memory.");
     return NULL;
   }
- 
+
   // Send message size
   size_msg.mtype = SIZE_MSG;
   size_msg.size = strlen(cstring) + 1;
@@ -112,7 +112,7 @@ msgq_msgrcv(PyObject *self, PyObject *args)
 
   struct size_msgbuf size_msg;
   struct msgbuf *data_msg;
-  
+
   if (!PyArg_ParseTuple(args, "ii", &msqid, &msgflg)) {
     return NULL;
   }
@@ -216,7 +216,7 @@ msgq_msgctl(PyObject *self, PyObject *args)
     Py_DECREF(dict_ipc_perm);
 
     tmp_obj = Py_BuildValue("i", buf->msg_stime);
-    PyDict_SetItemString(dict_msqid_ds, "msg_stime", 
+    PyDict_SetItemString(dict_msqid_ds, "msg_stime",
 			 tmp_obj);
     Py_DECREF(tmp_obj);
 
@@ -263,13 +263,13 @@ static PyMethodDef msgq_methods[] = {
   {"msgsnd", msgq_msgsnd, METH_VARARGS,
    "msgrcv, msgsnd - message operations"},
   {"msgrcv", msgq_msgrcv, METH_VARARGS,
-   "msgrcv, msgsnd - message operations"},    
+   "msgrcv, msgsnd - message operations"},
   {"msgctl", msgq_msgctl, METH_VARARGS,
    "msgctl - message control operations"},
   {NULL, NULL, 0, NULL}   // Sentinel
 };
 
-PyDoc_STRVAR(msgq_doc, 
+PyDoc_STRVAR(msgq_doc,
 "This module provides access to System V messages queues (IPC) by\n\
 wrapping relevant system calls:\n\
 ftok, msgget, msgsnd, msgrcv and msgctl\n\n\
