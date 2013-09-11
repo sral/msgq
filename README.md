@@ -28,11 +28,15 @@ queue. The objects you wish to pass must support "pickling". Here's an example:
 0
 </pre>
 
-To build the extension type in the following:
+To build the extension type in the following:  
+<pre>
 $ setup.py build
-And to install the extenstion try this:
+</pre>
+And to install the extenstion try this:  
+<pre>
 $ setup.py install
+</pre>
 
 Good luck ...
 
---l (lars.djerf@gmail.com)
+--sral (lars.djerf@gmail.com)
