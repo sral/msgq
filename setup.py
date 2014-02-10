@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-#
-# Setup script for msgq
-
 from setuptools import setup, Extension
 
 setup(name="msgq",
