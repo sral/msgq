@@ -3,7 +3,6 @@ import unittest
 
 
 class TestMsgqInternals(unittest.TestCase):
-
     def test_is_defined_IPC_CREAT(self):
         """IPC_CREATE should equal 512"""
 
@@ -11,6 +10,7 @@ class TestMsgqInternals(unittest.TestCase):
 
     def test_is_defined_IPC_EXCL(self):
         """IPC_EXCL should equal 1024"""
+
         self.assertEqual(msgq.IPC_EXCL, 1024)
 
     def test_is_defined_IPC_NOWAIT(self):
@@ -45,9 +45,13 @@ class TestMsgqInternals(unittest.TestCase):
 
 
 class TestPassObjects(unittest.TestCase):
+
+    key = None
+    id = None
+
     def setUp(self):
         self.key = msgq.ftok("msgq.so", 42)
-        self.ID = msgq.msgget(self.key, 0666 | msgq.IPC_CREAT)
+        self.id = msgq.msgget(self.key, 0666 | msgq.IPC_CREAT)
 
     def test_pass_none(self):
         """Pass None through queue.
@@ -56,8 +60,8 @@ class TestPassObjects(unittest.TestCase):
         2.) Receive from queue
         => We should get None back."""
 
-        msgq.msgsnd(self.ID, 0, None)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), None)
+        msgq.msgsnd(self.id, 0, None)
+        self.assertEqual(msgq.msgrcv(self.id, 0), None)
 
     def test_pass_int(self):
         """Pass int through queue.
@@ -66,8 +70,8 @@ class TestPassObjects(unittest.TestCase):
         2.) Receive from queue
         => Received data should equal the sent data."""
 
-        msgq.msgsnd(self.ID, 0, 13)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), 13)
+        msgq.msgsnd(self.id, 0, 13)
+        self.assertEqual(msgq.msgrcv(self.id, 0), 13)
 
     def test_pass_float(self):
         """Pass float through queue.
@@ -76,8 +80,8 @@ class TestPassObjects(unittest.TestCase):
         2.) Receive from queue
         => Received data should equal the sent data."""
 
-        msgq.msgsnd(self.ID, 0, 2.0)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), 2.0)
+        msgq.msgsnd(self.id, 0, 2.0)
+        self.assertEqual(msgq.msgrcv(self.id, 0), 2.0)
 
     def test_pass_long(self):
         """Pass long through queue.
@@ -86,8 +90,8 @@ class TestPassObjects(unittest.TestCase):
         2.) Receive from queue
         => Received data should equal the sent data."""
 
-        msgq.msgsnd(self.ID, 0, 2**32L)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), 2**32L)
+        msgq.msgsnd(self.id, 0, 2 ** 32L)
+        self.assertEqual(msgq.msgrcv(self.id, 0), 2 ** 32L)
 
     def test_pass_string(self):
         """Pass string through queue.
@@ -99,8 +103,8 @@ class TestPassObjects(unittest.TestCase):
 
         data = "Ad astra per alia porci"
 
-        msgq.msgsnd(self.ID, 0, data)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), data)
+        msgq.msgsnd(self.id, 0, data)
+        self.assertEqual(msgq.msgrcv(self.id, 0), data)
 
     def test_pass_list(self):
         """Pass list through queue.
@@ -112,8 +116,8 @@ class TestPassObjects(unittest.TestCase):
 
         data = [1, 2, 3]
 
-        msgq.msgsnd(self.ID, 0, data)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), data)
+        msgq.msgsnd(self.id, 0, data)
+        self.assertEqual(msgq.msgrcv(self.id, 0), data)
 
     def test_pass_dictonary(self):
         """Pass dictonary through queue.
@@ -125,8 +129,8 @@ class TestPassObjects(unittest.TestCase):
 
         data = {1: 'foo', 'bar': 42}
 
-        msgq.msgsnd(self.ID, 0, data)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), data)
+        msgq.msgsnd(self.id, 0, data)
+        self.assertEqual(msgq.msgrcv(self.id, 0), data)
 
     def test_pass_tuple(self):
         """Pass tuple through queue.
@@ -138,8 +142,8 @@ class TestPassObjects(unittest.TestCase):
 
         data = (1, 2, "foo", None)
 
-        msgq.msgsnd(self.ID, 0, data)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), data)
+        msgq.msgsnd(self.id, 0, data)
+        self.assertEqual(msgq.msgrcv(self.id, 0), data)
 
     def test_pass_set(self):
         """Pass set through queue.
@@ -151,8 +155,8 @@ class TestPassObjects(unittest.TestCase):
 
         data = set([1, 7, 9, 13])
 
-        msgq.msgsnd(self.ID, 0, data)
-        self.assertEqual(msgq.msgrcv(self.ID, 0), data)
+        msgq.msgsnd(self.id, 0, data)
+        self.assertEqual(msgq.msgrcv(self.id, 0), data)
 
     def tearDown(self):
-        msgq.msgctl(self.ID, msgq.IPC_RMID)
+        msgq.msgctl(self.id, msgq.IPC_RMID)

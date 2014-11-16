@@ -21,15 +21,14 @@
  */
 
 #ifndef MSGQ_H
-#define MSGQ_G
+#define MSGQ_H
 
-struct size_msgbuf
-{
-  long mtype;
-  int size;
+struct size_msgbuf {
+    long mtype;
+    size_t size;
 };
 
 #define SIZE_MSG 2
 #define DATA_MSG 3
 
-#endif
+#endif /* MSGQ_H */
