@@ -7,7 +7,7 @@ available to Python applications. The following system calls are exposed:
 - ftok: convert a pathname and a project identifier to a System V IPC key
 - msgget: get a message queue identifier
 - msgsnd: send message to queue
-- msgrcv: receive message from queu
+- msgrcv: receive message from queue
 - msgctl: message control operations
 
 For more information on the system calls go visit your man pages.
@@ -28,11 +28,11 @@ queue. The objects you wish to pass must support "pickling". Here's an example:
 0
 </pre>
 
-To build the extension type in the following:
+To build the extension issue:
 <pre>
 $ python setup.py build
 </pre>
-And to install the extenstion try this:
+To install the extenstion issue:
 <pre>
 $ python setup.py install
 </pre>
